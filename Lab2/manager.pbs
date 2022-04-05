@@ -1,0 +1,25 @@
+#!/bin/bash
+#PBS -l nodes=2:ppn=2,walltime=00:02:00
+#PBS -N Hryshchuk_Lab2
+
+cd $PBS_O_WORKDIR
+
+echo $num
+if [ -z "$num" ]; then
+    exit
+fi
+
+if [ $num -le 0 ]; then
+    exit
+fi
+nextmin=`date --date="1 minutes" +%H%M`
+echo "Task num = $num; time = $nextmin; jobid = $PBS_JOBID" >> statistics.txt
+num=`expr $num - 1`
+
+qsub -a $nextmin -v num=$num manager.sh
+
+ml icc
+ml openmpi
+mpirun ./hello >> statistics_detailed.txt
+
+qsub -v num=100 manager.sh
