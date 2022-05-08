@@ -1,0 +1,10 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=12,walltime=00:50:00
+#PBS -N Hryshchuk_Lab3
+cd $PBS_O_WORKDIR
+ml icc
+ml intelpython/3
+python3 matrix_generator.py $matrix_size
+file_name="array_"$matrix_size"x"$matrix_size".txt"
+./openmp_gaus_solver $matrix_size $file_name 1 12
+rm $file_name 
